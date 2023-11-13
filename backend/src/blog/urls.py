@@ -17,4 +17,5 @@ urlpatterns = [
     path('<slug>/delete',api_delete_blog_view, name='delete'),
     path('create',api_create_blog_view, name='create'),
     path('list',ApiBlogListView.as_view(), name='list'),
+   
 ]

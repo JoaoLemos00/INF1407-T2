@@ -5,15 +5,16 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.generics import ListAPIView
 from rest_framework.authentication import TokenAuthentication
+
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
 from account.models import Account
 from blog.models import BlogPost
-from blog.serializers import BlogPostSerializer
+from blog.serializers import BlogPostSerializer, BlogPostUpdateSerializer, BlogPostCreateSerializer
 
 @swagger_auto_schema(
-    method = 'post',
+    method = 'get',
     operation_summary = "Deltalhes Post", 
     operation_description = "Detalhes de um post",
     request_body = openapi.Schema(
@@ -28,7 +29,7 @@ from blog.serializers import BlogPostSerializer
     ),
 )
 @api_view(['GET', ])
-#@permission_classes((IsAuthenticated,))
+@permission_classes((IsAuthenticated,))
 def api_detail_blog_view(request,slug):
 
     try:
@@ -68,18 +69,22 @@ def api_update_blog_view(request,slug):
     if blog_post.author != user:
         return Response({'response':'Você não tem permissao para editar esse post'})
     
-    if request.method == "PUT":
-        serializer = BlogPostSerializer(blog_post, data=request.data)
+    if request.method == 'PUT':
+        serializer = BlogPostUpdateSerializer(blog_post, data=request.data, partial=True)
         data = {}
-
         if serializer.is_valid():
             serializer.save()
-            data["success"] = "Post atualizado com sucesso!"
-            
-            
+            data['response'] = "POST atualizado com sucesso!"
+            data['pk'] = blog_post.pk
+            data['title'] = blog_post.title
+            data['body'] = blog_post.body
+            data['slug'] = blog_post.slug
+            data['date_updated'] = blog_post.date_updated
+            image_url = str(request.build_absolute_uri(blog_post.image.url))
+            data['image'] = image_url
+            data['username'] = blog_post.author.username
             return Response(data=data)
-        
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     
 @api_view(['DELETE', ])
@@ -98,6 +103,7 @@ def api_delete_blog_view(request,slug):
     if request.method == "DELETE":
         operation = blog_post.delete()
         data = {}
+        
         if operation:
             data["success"] = "Post excluído com sucesso!"
         else:
@@ -120,23 +126,31 @@ def api_delete_blog_view(request,slug):
         },
     ),
 )
-
 @api_view(['POST', ])
 @permission_classes((IsAuthenticated,))
 def api_create_blog_view(request):
-    account = request.user
 
-    blog_post = BlogPost(author=account)
+    if request.method == 'POST':
 
-    if request.method == "POST":
-        serializer = BlogPostSerializer(blog_post,data=request.data)
+        data = request.data
+        data['author'] = request.user.pk
+        serializer = BlogPostCreateSerializer(data=data)
 
+        data = {}
         if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        
-    return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+            blog_post = serializer.save()
+            data['response'] = 'POST Criado com sucesso!'
+            data['pk'] = blog_post.pk
+            data['title'] = blog_post.title
+            data['body'] = blog_post.body
+            data['slug'] = blog_post.slug
+            data['date_updated'] = blog_post.date_updated
+            image_url = str(request.build_absolute_uri(blog_post.image.url))
+            data['image'] = image_url
+            data['username'] = blog_post.author.username
+            return Response(data=data)
 
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class ApiBlogListView(ListAPIView):
     queryset = BlogPost.objects.all()
@@ -144,3 +158,5 @@ class ApiBlogListView(ListAPIView):
     #authentication_classes = [TokenAuthentication,]
     #permission_classes = [IsAuthenticated,]
     pagination_class = PageNumberPagination
+
+

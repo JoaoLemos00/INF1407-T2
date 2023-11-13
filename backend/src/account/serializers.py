@@ -37,3 +37,4 @@ class AccountPropertiesSerializer(serializers.ModelSerializer):
 class AccountDeleteSerializer(serializers.Serializer):
     username = serializers.CharField()
     password = serializers.CharField()
+

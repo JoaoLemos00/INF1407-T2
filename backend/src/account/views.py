@@ -110,6 +110,7 @@ def delete_account(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
+
 class ObtainAuthTokenView(APIView):
     authentication_classes = []
     permission_classes = []
@@ -130,21 +131,27 @@ class ObtainAuthTokenView(APIView):
     def post(self, request):
         context = {}
 
-        email = request.POST.get('username')
+        email = request.POST.get('email')
         password = request.POST.get('password')
         account = authenticate(email=email, password=password)
+        print(email)
+        print(password)
+        print(account)
+
         if account:
             try:
                 token = Token.objects.get(user=account)
             except Token.DoesNotExist:
                 token = Token.objects.create(user=account)
-                context['response'] = 'Autentificacao certa'
-                context['pk'] = account.pk
-                context['email'] = email
-                context['token'] = token.key
-            else:
-                context['response'] = 'Error'
-                context['error_message'] = 'Credenciais Invalidas'
+
+            context['response'] = 'Autentificacao certa'
+            context['pk'] = account.pk
+            context['email'] = email
+            context['token'] = token.key
+           
+        else:
+            context['response'] = 'Error'
+            context['error_message'] = 'Credenciais Invalidas'
 
         return Response(context)
      
