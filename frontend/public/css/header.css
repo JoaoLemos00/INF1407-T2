@@ -1,0 +1,23 @@
+.mesmaLinha {
+    display: inline;
+}
+
+.visivel {
+    display: inline !important; 
+}
+
+.invisivel {
+    display: none !important; 
+}
+
+
+.logo-img {
+    width: 100px; 
+    height: auto; 
+}
+
+.logo-container {
+    position: absolute;
+    top: 15px; 
+    left: 10px; 
+}

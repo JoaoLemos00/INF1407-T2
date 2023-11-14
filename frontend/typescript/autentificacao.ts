@@ -1,10 +1,10 @@
 window.addEventListener('load', () => {
     // Verifica o username e coloca no cabeçalho da página
     const token = localStorage.getItem('token'); // Recupera o token de autenticação
-    fetch('http://127.0.0.1:8000/account/login', {
+    fetch(backendAddress + 'account/login', {
         method: 'GET',
         headers: {
-            'Authorization': "Token " + token // Reenvia o token no cabeçalho HTTP
+            'Authorization': 'Bearer ' + token // Reenvia o token no cabeçalho HTTP
         }
     })
         .then(response => {

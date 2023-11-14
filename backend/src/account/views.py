@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from account.models import Account
 from rest_framework.views import APIView
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate,login
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
@@ -131,12 +131,11 @@ class ObtainAuthTokenView(APIView):
     def post(self, request):
         context = {}
 
-        email = request.POST.get('email')
-        password = request.POST.get('password')
+        email = request.data.get('username')
+        if email == None:
+            email = request.data.get('email')
+        password = request.data.get('password')
         account = authenticate(email=email, password=password)
-        print(email)
-        print(password)
-        print(account)
 
         if account:
             try:
@@ -148,11 +147,23 @@ class ObtainAuthTokenView(APIView):
             context['pk'] = account.pk
             context['email'] = email
             context['token'] = token.key
-           
+            login(request, account)
         else:
             context['response'] = 'Error'
             context['error_message'] = 'Credenciais Invalidas'
 
         return Response(context)
      
-    
+    def get(self, request):
+
+        try:
+            token = request.META.get('HTTP_AUTHORIZATION').split(' ')[1] # token
+            token_obj = Token.objects.get(key=token)
+            user = token_obj.user
+
+            return Response({'username': user.username}, status=status.HTTP_200_OK)
+
+        except (Token.DoesNotExist, AttributeError):
+
+            return Response({'username': 'visitante'}, status=status.HTTP_404_NOT_FOUND)
+        
