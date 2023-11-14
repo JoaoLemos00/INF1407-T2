@@ -4,7 +4,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from account.models import Account
 from rest_framework.views import APIView
-from django.contrib.auth import authenticate,login
+from django.contrib.auth import authenticate,login, logout
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
@@ -14,13 +14,13 @@ from rest_framework.authtoken.models import Token
 @swagger_auto_schema(request_body = RegistrationSerializer, method = 'post')
 @api_view(['POST', ])
 def registration_view(request):
-    
+
     if request.method == 'POST':
         serializer = RegistrationSerializer(data=request.data)
         data = {}
         if serializer.is_valid():
             account = serializer.save()
-            data['response'] = "Usuário registrado com sucesso"
+            data['response'] = "Usuário registrado com sucesso!"
             data['email'] = account.email
             data['username'] = account.username
             token = Token.objects.get(user = account).key
@@ -30,7 +30,7 @@ def registration_view(request):
         return Response(data)
 
 @swagger_auto_schema(
-    method = 'post',
+    method = 'DELETE',
     operation_summary = "Logout", 
     operation_description = "Fazer o Logout",
     request_body = openapi.Schema(
@@ -42,11 +42,41 @@ def registration_view(request):
         },
     ),
 )
-@api_view(['POST', ])
+
+@api_view(['DELETE', ])
 def logout_view(request):
-     if request.method == "POST":
-          request.user.auth_token.delete()
-          return Response({"Message":"Logout feito com sucesso!"},status=status.HTTP_200_OK)
+    
+    try:
+        # Certifique-se de que o cabeçalho Authorization existe e tem o formato correto
+        print(request.META)
+        authorization_header = request.META.get('HTTP_AUTHORIZATION')
+        if not authorization_header or not authorization_header.startswith('Bearer '):
+            return Response({'msg': 'Token inválido ou ausente.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        
+        token = authorization_header.split(' ')[1]
+        token_obj = Token.objects.get(key=token)
+
+        # Verifique se o usuário está autenticado antes de realizar o logout
+        user = token_obj.user
+        if user.is_authenticated:
+            request.user = user
+            logout(request)
+            token_obj.delete()
+            return Response({'msg': 'Logout bem-sucedido.'}, status=status.HTTP_200_OK)
+        else:
+            return Response({'msg': 'Usuário não autenticado.'}, status=status.HTTP_403_FORBIDDEN)
+
+    except Token.DoesNotExist:
+        print('Token não existe.')
+        return Response({'msg': 'Token não existe.'}, status=status.HTTP_400_BAD_REQUEST)
+    except IndexError:
+        print('Formato de token inválido.')
+        return Response({'msg': 'Formato de token inválido.'}, status=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        print(f'Erro não esperado: {e}')
+        # Capture outras exceções e retorne uma resposta adequada
+        return Response({'msg': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
      
 
 @api_view(['GET',])

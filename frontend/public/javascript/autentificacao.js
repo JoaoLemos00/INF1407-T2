@@ -4,7 +4,7 @@ window.addEventListener('load', function () {
     fetch(backendAddress + 'account/login', {
         method: 'GET',
         headers: {
-            'Authorization': 'Bearer ' + token // Reenvia o token no cabeçalho HTTP
+            'Authorization': tokenKeyword + token // Reenvia o token no cabeçalho HTTP
         }
     })
         .then(function (response) {
