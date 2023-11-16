@@ -1,7 +1,8 @@
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.decorators import api_view, permission_classes
+from rest_framework.decorators import api_view, permission_classes,authentication_classes
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
 from account.models import Account
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate,login, logout
@@ -44,20 +45,17 @@ def registration_view(request):
 )
 
 @api_view(['DELETE', ])
+@authentication_classes([TokenAuthentication])
+@permission_classes((IsAuthenticated,))
 def logout_view(request):
-    
     try:
-        # Certifique-se de que o cabeçalho Authorization existe e tem o formato correto
-        print(request.META)
         authorization_header = request.META.get('HTTP_AUTHORIZATION')
-        if not authorization_header or not authorization_header.startswith('Bearer '):
+        if not authorization_header or not authorization_header.startswith('Token '):
             return Response({'msg': 'Token inválido ou ausente.'}, status=status.HTTP_400_BAD_REQUEST)
 
-        
         token = authorization_header.split(' ')[1]
         token_obj = Token.objects.get(key=token)
 
-        # Verifique se o usuário está autenticado antes de realizar o logout
         user = token_obj.user
         if user.is_authenticated:
             request.user = user
@@ -80,16 +78,18 @@ def logout_view(request):
      
 
 @api_view(['GET',])
+@authentication_classes([TokenAuthentication])
 @permission_classes((IsAuthenticated,))
 def account_properties_view(request):
+
     try:
         account = request.user
-    except Account.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    
-    if request.method == 'GET':
         serializer = AccountPropertiesSerializer(account)
         return Response(serializer.data)
+    except Exception as e:
+        print(f'Erro não esperado: {e}')
+        
+        return Response({'msg': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 
 @swagger_auto_schema(request_body = RegistrationSerializer, method = 'put')
@@ -130,13 +130,21 @@ def update_account_view(request):
 @permission_classes([IsAuthenticated])
 def delete_account(request):
     serializer = AccountDeleteSerializer(data=request.data)
+    data = {}
+
     if serializer.is_valid():
         user = request.user
-        if user.check_password(serializer.validated_data['password']) and user.username == serializer.validated_data['username']:
+
+        if user.check_password(serializer.validated_data['password']) and user.email == serializer.validated_data['email']:
             user.delete()
-            return Response({'message': 'Conta deletada!'}, status=status.HTTP_204_NO_CONTENT)
+            data['response'] = "Conta deletada!"
+            
+            return Response(data=data, status=status.HTTP_200_OK)  # Change status code to 200 OK
         else:
-            return Response({'error': 'Senha ou usuario incorreto'}, status=status.HTTP_400_BAD_REQUEST)
+            data['response'] = "Senha ou usuário incorreto"
+            
+            return Response(data=data, status=status.HTTP_400_BAD_REQUEST)
+
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 

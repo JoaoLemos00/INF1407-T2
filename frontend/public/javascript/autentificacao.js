@@ -9,7 +9,6 @@ window.addEventListener('load', function () {
     })
         .then(function (response) {
             response.json().then(function (data) {
-
                 var usuario = data;
                 if (response.ok) {
                     console.log('Usuário autenticado:', usuario.username);

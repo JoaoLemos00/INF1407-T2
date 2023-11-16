@@ -1,5 +1,5 @@
 onload = function () {
-
+    
     document.getElementById("btnLogin").addEventListener("click", function (evento) {
         evento.preventDefault();
         var username = document.getElementById("username").value;
@@ -20,11 +20,9 @@ onload = function () {
             return response.json();
         })
         .then(function (data) {
-            console.log(data.response);
             if (data.response == "Autentificacao certa") {
                 var token = data.token;
                 localStorage.setItem("token", token);
-                // Redireciona para a página após o login
                 window.location.replace("index.html");
             } else {
                 throw new Error("Falha na autenticação");

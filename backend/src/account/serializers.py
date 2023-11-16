@@ -35,6 +35,6 @@ class AccountPropertiesSerializer(serializers.ModelSerializer):
         fields = ['pk', 'email', 'username']
 
 class AccountDeleteSerializer(serializers.Serializer):
-    username = serializers.CharField()
+    email = serializers.CharField()
     password = serializers.CharField()
 

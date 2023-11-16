@@ -9,12 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
             const password1 = document.getElementById("password1").value;
             const password2 = document.getElementById("password2").value;
             const msg = document.getElementById("msg");
-
-            // Adicione validações adicionais conforme necessário
-            if (password1 !== password2) {
-                msg.innerHTML = "As senhas não coincidem.";
-                return;
-            }
+            msg.innerHTML = '';
 
             fetch(backendAddress + "account/register", {
                 method: "POST",
@@ -32,11 +27,13 @@ document.addEventListener("DOMContentLoaded", function () {
                     return response.json();
                 })
                 .then(function (data) {
-                    console.log(data.email[0]);
+                    
                     if (data.email && data.email.length > 0) {
                         msg.innerHTML = data.email[0];
                     } else if (data.username && data.username.length > 0) {
                         msg.innerHTML = data.username[0];
+                    } else if (data.password) {
+                        msg.innerHTML = data.password;
                     } else if (data.response === "Usuário registrado com sucesso!") {
                         var token = data.token;
                         localStorage.setItem("token", token);
@@ -44,10 +41,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     } else {
                         throw new Error("Falha no registro");
                     }
+
                 })
                 .catch(function (error) {
                     console.log(error);
-                    msg.innerHTML = "Error during registration. Please try again.";
                 });
         });
     }

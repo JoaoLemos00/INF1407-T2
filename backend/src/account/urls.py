@@ -18,5 +18,5 @@ urlpatterns = [
     path('logout', logout_view, name='logout'),
     path('properties', account_properties_view, name="properties"),
     path('properties/update', update_account_view, name="update"),
-    path('properties/delete-account/', delete_account, name='account-delete'),
+    path('properties/delete-account', delete_account, name='account-delete'),
 ]
