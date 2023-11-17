@@ -20,10 +20,13 @@ onload = function () {
             return response.json();
         })
         .then(function (data) {
+            console.log(data);
             if (data.response == "Autentificacao certa") {
                 var token = data.token;
                 localStorage.setItem("token", token);
                 window.location.replace("index.html");
+            }else if (data.response) {
+                    msg.innerHTML = data.response;
             } else {
                 throw new Error("Falha na autenticação");
             }

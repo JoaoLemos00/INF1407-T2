@@ -65,20 +65,14 @@ REST_FRAMEWORK = {
 
 }
 
-CORS_ORIGIN_WHITELIST = [
-    'http://0.0.0.0:8080',
-    'http://127.0.0.1:8080',
-    'http://localhost:8080',
-    # Adicione outras origens permitidas, se necessário
-]
-
+CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
 
 MIDDLEWARE = [
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',

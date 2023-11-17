@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <title>Title</title>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <!-- Bootstrap CSS v5.2.1 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+
+    <script src="javascript/constantes.js"></script>
+    <script src="javascript/create_post.js"></script>
+
+</head>
+
+
+<body>
+
+  <header>
+    <iframe src="snippets/header.html" frameborder="0" height="72px" width="100%"></iframe>
+  </header>
+  <main>
+
+    <div class="container mt-5 ">
+        <div class="row justify-content-center ">
+            <div class="col-md-6 ">
+                <div class="card text-bg-dark">
+                    <div class="card-header ">
+                        <h3 class="text-center">Criar Nova Postagem</h3>
+                    </div>
+                    <div class="card-body">
+                        <form enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <label for="id_title" class="form-label">Título</label>
+                                <input type="text" name="title" class="form-control text-bg-dark" id="title" placeholder="Título" required autofocus>
+                            </div>
+                            <div class="mb-3">
+                                <label for="id_body" class="form-label">Conteúdo</label>
+                                <textarea name="body" id="body" rows="10" class="form-control text-bg-dark" placeholder="Qual é a sua receita?" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="id_image" class="form-label text-bg-dark">Imagem</label>
+                                <input type="file" name="image" id="image" accept="image/*" class="form-control text-bg-dark">
+                            </div>
+                            <div class="text-center">
+                                <button type="submit" id="btnPost" class="btn btn-warning">POSTAR</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+  </main>
+  <footer>
+    <!-- place footer here -->
+  </footer>
+  <!-- Bootstrap JavaScript Libraries -->
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+    integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js"
+    integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous">
+  </script>
+</body>
+
+</html>

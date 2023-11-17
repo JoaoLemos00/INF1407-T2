@@ -12,56 +12,38 @@ MIN_BODY_LENGTH = 50
 
 class BlogPostSerializer(serializers.ModelSerializer):
 
-    username = serializers.SerializerMethodField('get_username_from_author')
-
-    class Meta:
-        model = BlogPost
-        fields = ['pk','title','slug','body','image','date_updated','date_published','username']
-
-    def get_username_from_author(self, blog_post):
-        username = blog_post.author.username
-        return username
-    
-
-class BlogPostCreateSerializer(serializers.ModelSerializer):
-
+	username = serializers.SerializerMethodField('get_username_from_author')
 
 	class Meta:
 		model = BlogPost
-		fields = ['title', 'body', 'image', 'date_updated', 'author']
+		fields = ['title','slug','body','image','date_updated','date_published','username']
+
+	def get_username_from_author(self, blog_post):
+		username = blog_post.author.username
+		return username
+
+    
+
+class BlogPostCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BlogPost
+        fields = ['title', 'body', 'image', 'author']
 
 
-	def save(self):
-		
-		try:
-			image = self.validated_data['image']
-			title = self.validated_data['title']
-			body = self.validated_data['body']
-			
-			
-			blog_post = BlogPost(
-								author=self.validated_data['author'],
-								title=title,
-								body=body,
-								image=image,
-								)
+    def create(self, validated_data):
+        # Remova a chave 'image' do dicionário se não houver imagem presente
+        image = validated_data.pop('image', None)
 
-			url = os.path.join(settings.TEMP , str(image))
-			storage = FileSystemStorage(location=url)
+        # Crie a instância do BlogPost sem a imagem
+        blog_post = BlogPost.objects.create(**validated_data)
 
-			with storage.open('', 'wb+') as destination:
-				for chunk in image.chunks():
-					destination.write(chunk)
-				destination.close()
+        # Adicione a imagem se estiver presente
+        if image:
+            blog_post.image = image
+            blog_post.save()
 
+        return blog_post
 
-			os.remove(url)
-			blog_post.save()
-			
-			return blog_post
-		
-		except KeyError:
-			raise serializers.ValidationError({"response": "É Obrigatorio colocar uma imagem"}) 
 
 
 class BlogPostUpdateSerializer(serializers.ModelSerializer):
@@ -70,21 +52,5 @@ class BlogPostUpdateSerializer(serializers.ModelSerializer):
 		model = BlogPost
 		fields = ['title', 'body', 'image']
 
-	def validate(self, blog_post):
-		
-		try:
-			image = blog_post['image']
-			url = os.path.join(settings.TEMP , str(image))
-			storage = FileSystemStorage(location=url)
 
-			with storage.open('', 'wb+') as destination:
-				for chunk in image.chunks():
-					destination.write(chunk)
-				destination.close()
-
-			os.remove(url)
-			
-		except KeyError:
-			pass
-		return blog_post
 	

@@ -29,7 +29,6 @@ from blog.serializers import BlogPostSerializer, BlogPostUpdateSerializer, BlogP
     ),
 )
 @api_view(['GET', ])
-@permission_classes((IsAuthenticated,))
 def api_detail_blog_view(request,slug):
 
     try:
@@ -126,31 +125,26 @@ def api_delete_blog_view(request,slug):
         },
     ),
 )
-@api_view(['POST', ])
-@permission_classes((IsAuthenticated,))
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def api_create_blog_view(request):
-
     if request.method == 'POST':
+        
+        data = request.POST.copy()
+        data.update(request.FILES)
 
-        data = request.data
         data['author'] = request.user.pk
+       
         serializer = BlogPostCreateSerializer(data=data)
 
-        data = {}
         if serializer.is_valid():
-            blog_post = serializer.save()
-            data['response'] = 'POST Criado com sucesso!'
-            data['pk'] = blog_post.pk
-            data['title'] = blog_post.title
-            data['body'] = blog_post.body
-            data['slug'] = blog_post.slug
-            data['date_updated'] = blog_post.date_updated
-            image_url = str(request.build_absolute_uri(blog_post.image.url))
-            data['image'] = image_url
-            data['username'] = blog_post.author.username
-            return Response(data=data)
+            serializer.save()
+            return Response({'response': 'Post Criado com Sucesso!'})
+        else:
+            return Response(serializer.errors, status=400)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    # Se o método da solicitação não for POST, retorne um erro
+    return Response({'error': 'Método não permitido'}, status=405)
 
 class ApiBlogListView(ListAPIView):
     queryset = BlogPost.objects.all()

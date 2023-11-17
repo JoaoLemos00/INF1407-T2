@@ -1,0 +1,51 @@
+body{
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: #1F2223;
+    
+}
+  .main{
+    min-height: 100vh;
+    height: 100%;
+  }
+
+  iframe {
+    width: 100%;
+    background-color: black;
+  }
+
+  .container-create-post {
+    margin-top: -45px;
+  }
+
+  .container-post {
+    margin-top: -195px;
+    max-width: 1200px; /* Define a largura máxima se desejar */
+    width: 115%; /* Ajuste a largura conforme necessário */
+  /* Adicione outras regras de estilo conforme necessário */
+    
+  }
+  
+  .container{
+    margin-top: -80px;
+    padding: 15px; /* Adapte o preenchimento conforme necessário */
+  
+  }
+  /* blog_post.css */
+
+.card-body img {
+    max-width: 100%; /* Ajusta a largura máxima da imagem para o tamanho do contêiner pai */
+    height: 50%;    /* Mantém a proporção original da imagem */
+    display: block;  /* Garante que a imagem não tenha margens indesejadas */
+    margin: auto;    /* Centraliza a imagem horizontalmente */
+    margin-bottom: 10px; /* Adiciona margem inferior para espaçamento entre a imagem e o conteúdo abaixo */
+}
+
+
+/* Adiciona algum espaçamento entre os cards */
+.card-container {
+    margin-bottom: 20px; /* Adicione o espaçamento entre os cards conforme necessário */
+}

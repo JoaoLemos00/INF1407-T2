@@ -187,8 +187,7 @@ class ObtainAuthTokenView(APIView):
             context['token'] = token.key
             login(request, account)
         else:
-            context['response'] = 'Error'
-            context['error_message'] = 'Credenciais Invalidas'
+            context['response'] = 'Credenciais Invalidas'
 
         return Response(context)
      
