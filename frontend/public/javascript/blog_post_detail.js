@@ -53,7 +53,7 @@ function displayBlogPostDetails(blogPost,usuarioAuth) {
 
     var headerPost = document.createElement('p');
     headerPost.className = 'card-text';
-    headerPost.innerHTML = 'Postado por ' + blogPost.username + ', em'+ date_published;
+    headerPost.innerHTML = 'Postado por ' + blogPost.username + ', em '+ date_published;
     div2.appendChild(headerPost);
 
     var div3 = document.createElement('div');
