@@ -17,7 +17,6 @@ window.addEventListener('load', function (evento) {
 });
 
 
-
 document.addEventListener("DOMContentLoaded", function () {
     var btnSaveChanges = document.getElementById("btnSaveChanges");
     if (btnSaveChanges) {
@@ -27,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
             var newUsername = document.getElementById("username").value;
             const msg = document.getElementById("msg");
             var token = localStorage.getItem('token');
-
+            
             fetch(backendAddress + "account/properties/update", {
                 method: "PUT",
                 headers: {

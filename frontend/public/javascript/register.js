@@ -27,21 +27,19 @@ document.addEventListener("DOMContentLoaded", function () {
                     return response.json();
                 })
                 .then(function (data) {
-                    
-                    if (data.email && data.email.length > 0) {
-                        msg.innerHTML = data.email[0];
-                    } else if (data.username && data.username.length > 0) {
-                        msg.innerHTML = data.username[0];
-                    } else if (data.password) {
-                        msg.innerHTML = data.password;
-                    } else if (data.response === "Usuário registrado com sucesso!") {
+                    if(data.response === "Usuário registrado com sucesso!"){
                         var token = data.token;
                         localStorage.setItem("token", token);
                         window.location.replace("index.html");
+                    } else if (data.email) {
+                        msg.innerHTML = data.email;
+                    } else if (data.username) {
+                        msg.innerHTML = data.username;
+                    } else if (data.password) {
+                        msg.innerHTML = data.password;
                     } else {
                         throw new Error("Falha no registro");
                     }
-
                 })
                 .catch(function (error) {
                     console.log(error);

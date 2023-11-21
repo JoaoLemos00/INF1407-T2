@@ -1,45 +1,37 @@
-onload = () => {
-    (document.getElementById("btnLogin") as HTMLInputElement).addEventListener(
-      "click",
-      (evento) => {
-        evento.preventDefault();
-        const email: String = (
-          document.getElementById("email") as HTMLInputElement
-        ).value;
-        const password: String = (
-          document.getElementById("password") as HTMLInputElement
-        ).value;
-        const msg = document.getElementById("msg") as HTMLDivElement;
-        
-        fetch(backendAddress + "accounts/token-auth/", {
-          method: "POST",
-          body: JSON.stringify({
-            email: email,
-            password: password,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        })
-          .then((response: Response) => {
-            if (response.ok) {
-              return response.json();
-            } else {
-              if (response.status == 401) {
-                msg.innerHTML = "Usuário ou senha inválidos.";
-              }
-              throw new Error("Falha na autenticação");
-            }
-          })
-          .then((data: { token: string }) => {
-            const token: string = data.token;
-            localStorage.setItem("token", token);
-            window.location.replace("loginDone.html");
-          })
-          .catch((erro) => {
-            console.log(erro);
-          });
-      }
-    );
-  };
-  
+window.onload = function () {
+  document.getElementById("btnLogin").addEventListener("click", function (evento) {
+    evento.preventDefault();
+    var username = (document.getElementById("username") as HTMLInputElement).value;
+    var password = (document.getElementById("password") as HTMLInputElement).value;
+    var msg = document.getElementById("msg");
+
+    fetch(backendAddress + "account/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: username,
+        password: password,
+      }),
+    })
+      .then(function (response) {
+        return response.json();
+      })
+      .then(function (data) {
+        if (data.response == "Autentificacao certa") {
+          var token = data.token;
+          localStorage.setItem("token", token);
+          window.location.replace("index.html");
+        } else if (data.response) {
+          msg.innerHTML = data.response;
+        } else {
+          throw new Error("Falha na autenticação");
+        }
+      })
+      .catch(function (error) {
+        console.log(error);
+        msg.innerHTML = "Erro durante o login. Por favor, tente novamente.";
+      });
+  });
+};

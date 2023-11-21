@@ -57,32 +57,37 @@ def api_detail_blog_view(request,slug):
 )
 @api_view(['PUT', ])
 @permission_classes((IsAuthenticated,))
-def api_update_blog_view(request,slug):
-
+def api_update_blog_view(request, slug):
     try:
         blog_post = BlogPost.objects.get(slug=slug)
     except BlogPost.DoesNotExist:
         return Response(status=status.HTTP_404_NOT_FOUND)
-    
+
     user = request.user
     if blog_post.author != user:
-        return Response({'response':'Você não tem permissao para editar esse post'})
-    
+        return Response({'response': 'Você não tem permissão para editar este post'})
+
     if request.method == 'PUT':
         serializer = BlogPostUpdateSerializer(blog_post, data=request.data, partial=True)
-        data = {}
         if serializer.is_valid():
             serializer.save()
-            data['response'] = "POST atualizado com sucesso!"
-            data['pk'] = blog_post.pk
-            data['title'] = blog_post.title
-            data['body'] = blog_post.body
-            data['slug'] = blog_post.slug
-            data['date_updated'] = blog_post.date_updated
-            image_url = str(request.build_absolute_uri(blog_post.image.url))
-            data['image'] = image_url
-            data['username'] = blog_post.author.username
-            return Response(data=data)
+            data = {
+                'response': 'POST atualizado com sucesso!',
+                'pk': blog_post.pk,
+                'title': blog_post.title,
+                'body': blog_post.body,
+                'slug': blog_post.slug,
+                'date_updated': blog_post.date_updated,
+                'username': blog_post.author.username,
+            }
+
+            # Adicione a URL da imagem ao retorno se existir
+            if blog_post.image:
+                image_url = request.build_absolute_uri(blog_post.image.url)
+                data['image'] = image_url
+
+            return Response(data)
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
     

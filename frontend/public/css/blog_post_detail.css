@@ -1,0 +1,7 @@
+.card-body img {
+    max-width: 100%; /* Ajusta a largura máxima da imagem para o tamanho do contêiner pai */
+    height: 50%;    /* Mantém a proporção original da imagem */
+    display: block;  /* Garante que a imagem não tenha margens indesejadas */
+    margin: auto;    /* Centraliza a imagem horizontalmente */
+    margin-bottom: 10px; /* Adiciona margem inferior para espaçamento entre a imagem e o conteúdo abaixo */
+}

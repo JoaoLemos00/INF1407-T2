@@ -1,33 +1,21 @@
-import {usuarioAuthPromise} from './autentificacao.js';
-
 document.addEventListener('DOMContentLoaded', function () {
-    exibeListaPosts();
-});
-
-document.addEventListener('DOMContentLoaded', function () {
-    usuarioAuthPromise.then(usuarioAuth => {
-        console.log(usuarioAuth);
-        exibeListaPosts();
-    });
-});
-
-function exibeListaPosts() {
     fetch(backendAddress + 'blog/list', {
         method: 'GET',
     }).then(function (response) {
         response.json().then(function (blogPosts) {
             var postList = document.getElementById("postList");
             postList.innerHTML = '';
-
+           
+            blogPosts.results.reverse();
             blogPosts.results.forEach(function (blogPost) {
                 var postElement = createBlogPostElement(blogPost);
                 postList.appendChild(postElement);
-            });
+            }); 
         }).catch(function (error) {
             console.error("Erro:", error);
         });
     });
-}
+})
 
 function createBlogPostElement(blogPost) {
 
@@ -35,7 +23,7 @@ function createBlogPostElement(blogPost) {
     const date = new Date(dateStringUpdated);
     const date_updated = date.toLocaleString();
 
-    const dateStringPublished = blogPost.date_updated;
+    const dateStringPublished = blogPost.date_published;
     const date2 = new Date(dateStringPublished);
     const date_published = date2.toLocaleString();
 
@@ -66,6 +54,7 @@ function createBlogPostElement(blogPost) {
     bodyPost.textContent = blogPost.body;
     cardBody.appendChild(bodyPost);
 
+
     if (blogPost.image !== null) {
         var imagePost = document.createElement('img');
         imagePost.src = blogPost.image;
@@ -78,7 +67,8 @@ function createBlogPostElement(blogPost) {
     var footerPost = document.createElement('div');
     footerPost.className = 'card-footer text-muted text-bg-dark';
 
-    if (date_updated && date_updated !== date_published) {
+
+    if (date_updated !== date_published) {
         footerPost.textContent = "Atualizado em " + date_updated;
     } else {
         footerPost.textContent = 'Post original';
@@ -91,7 +81,6 @@ function createBlogPostElement(blogPost) {
     postLink.style = "text-decoration: none !important";
     postLink.className = "link-dark";
     postLink.href = 'detail_post.html?slug=' + blogPost.slug;
-    console.log(postLink);
     
     postLink.addEventListener('click', function (event) {
         event.preventDefault();
@@ -100,6 +89,6 @@ function createBlogPostElement(blogPost) {
     })
     postLink.appendChild(div1);
 
-    return postLink;
 
+    return postLink;
 }
