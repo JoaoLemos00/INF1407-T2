@@ -12,7 +12,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
 
-    <script src="javascript/login.js"></script>
+    <script type="module" src="javascript/autentificacao.js"></script>
+    <script type="module" src="javascript/login.js"></script>
     <script src="javascript/constantes.js"></script>
 
 </head>
@@ -64,7 +65,7 @@
 
                             </div>
                             <div class="card-footer text-center">
-                                <p>Não tem uma conta? <a href="#">Cadastre-se</a></p>
+                                <p>Não tem uma conta? <a href="/frontend/public/register.html">Cadastre-se</a></p>
                                 <p>Esqueceu sua senha? <a href="#">Redefinir Senha</a></p>
                             </div>
                         </div>
@@ -76,8 +77,9 @@
     </main>
 
     <footer>
-        <iframe src="snippets/footer.html" frameborder="0" style="width: 100%; height: auto;" id="footer"></iframe>
+        
     </footer>
+    
     <!-- Bootstrap JavaScript Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
         integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous">

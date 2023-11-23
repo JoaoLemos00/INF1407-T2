@@ -7,7 +7,7 @@ from account.views import(
     ObtainAuthTokenView,
     logout_view,
     delete_account,
-
+    ChangePasswordView,
 )
 
 app_name = "account"
@@ -19,4 +19,6 @@ urlpatterns = [
     path('properties', account_properties_view, name="properties"),
     path('properties/update', update_account_view, name="update"),
     path('properties/delete-account', delete_account, name='account-delete'),
+    path('properties/change-password', ChangePasswordView.as_view(), name='change-password'),
+    
 ]

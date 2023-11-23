@@ -8,7 +8,8 @@ from rest_framework.views import APIView
 from django.contrib.auth import authenticate,login, logout
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
-
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
 from account.serializers import RegistrationSerializer, AccountPropertiesSerializer, AccountDeleteSerializer
 from rest_framework.authtoken.models import Token
 
@@ -147,6 +148,21 @@ def delete_account(request):
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+
+class ChangePasswordView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        user = request.user
+        form = PasswordChangeForm(user, request.data)
+
+        if form.is_valid():
+            user = form.save()
+            # Atualiza a sessão do usuário para evitar desconexão
+            update_session_auth_hash(request, user)
+            return Response({'message': 'Senha alterada com sucesso.'}, status=status.HTTP_200_OK)
+        else:
+            return Response(form.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class ObtainAuthTokenView(APIView):

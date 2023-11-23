@@ -8,6 +8,8 @@ window.addEventListener('load', function (evento) {
         
     }).then(function (response) {
         response.json().then(function (data) {
+            var title = document.getElementById('title');
+            title.innerHTML = 'Conta de ' + data.username 
             var objDivUser = document.getElementById('username');
             objDivUser.value = data.username;
             var objDivEmail = document.getElementById('email');

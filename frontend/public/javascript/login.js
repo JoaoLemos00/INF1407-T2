@@ -1,5 +1,23 @@
-onload = function () {
-    
+import { usuarioAuthPromise} from './autentificacao.js';
+
+document.addEventListener('DOMContentLoaded', function () {
+    usuarioAuthPromise.then(usuarioAuth => {
+        user_autenticado(usuarioAuth.usuarioAuth);
+        
+    });
+});
+
+
+function user_autenticado(usuarioAuth){
+    if (usuarioAuth === 'visitante') {
+        login();
+    } else {
+        window.location.replace("index.html");
+    }
+}
+
+// Certifique-se de que onload está definida antes de usá-la
+function login() {
     document.getElementById("btnLogin").addEventListener("click", function (evento) {
         evento.preventDefault();
         var username = document.getElementById("username").value;
@@ -20,13 +38,12 @@ onload = function () {
             return response.json();
         })
         .then(function (data) {
-     
             if (data.response == "Autentificacao certa") {
                 var token = data.token;
                 localStorage.setItem("token", token);
                 window.location.replace("index.html");
-            }else if (data.response) {
-                    msg.innerHTML = data.response;
+            } else if (data.response) {
+                msg.innerHTML = data.response;
             } else {
                 throw new Error("Falha na autenticação");
             }
@@ -36,5 +53,4 @@ onload = function () {
             msg.innerHTML = "Erro durante o login. Por favor, tente novamente.";
         });
     });
-
-};
+}

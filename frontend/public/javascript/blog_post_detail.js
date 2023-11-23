@@ -1,12 +1,8 @@
 import {usuarioAuthPromise} from './autentificacao.js';
 
 document.addEventListener('DOMContentLoaded', function () {
-    exibeDetailPost();
-});
-
-document.addEventListener('DOMContentLoaded', function () {
     usuarioAuthPromise.then(usuarioAuth => {
-        exibeDetailPost(usuarioAuth);
+        exibeDetailPost(usuarioAuth.usuarioAuth);
     });
 });
 
@@ -43,6 +39,9 @@ function displayBlogPostDetails(blogPost,usuarioAuth) {
     const date2 = new Date(dateStringPublished);
     const date_published = date2.toLocaleString();
 
+    var title = document.getElementById('title');
+    title.innerHTML = blogPost.title
+
     var div1 = document.createElement('div');
     div1.className = 'card m-auto mt-4 text-bg-dark';
     div1.style.width = '900px';
@@ -72,7 +71,7 @@ function displayBlogPostDetails(blogPost,usuarioAuth) {
     div4.className = 'd-flex justify-content-end mx-2';
     div3.appendChild(div4);
 
-    if (blogPost.username == usuarioAuth) {
+    if (blogPost.username === usuarioAuth) {
         var linkEdit = document.createElement('a');
         linkEdit.className = 'btn btn-warning mx-2';
         linkEdit.href = 'edit_post.html?slug=' + blogPost.slug;
@@ -102,6 +101,7 @@ function displayBlogPostDetails(blogPost,usuarioAuth) {
         var imagePost = document.createElement('img');
         imagePost.src = backendAddress + blogPost.image;
         div2.appendChild(imagePost);
+        console.log(imagePost.src);
     }
 
     if (date_updated!== date_published) {

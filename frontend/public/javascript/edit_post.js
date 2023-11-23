@@ -1,57 +1,60 @@
+import { usuarioAuthPromise } from './autentificacao.js';
+
 document.addEventListener('DOMContentLoaded', function () {
-    // Extrai o parâmetro pk (ID do post) da URL
-    var urlParams = new URLSearchParams(window.location.search);
-    var slug = urlParams.get('slug');
-    // Busca os detalhes do post pelo ID
-    fetch(backendAddress + 'blog/' + slug + '/', {
-        method: 'GET',
-    })
-        .then(function (response) {
-            response.json().then(function (blogPost) {
+    usuarioAuthPromise
+        .then(({ usuarioAuth }) => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const slug = urlParams.get('slug');
 
-                // Preencher os detalhes do post nos elementos HTML
-                document.getElementById("title").value = blogPost.title;
-                document.getElementById("body").value = blogPost.body;
-                document.getElementById("image").src = blogPost.image;
-
-            }).catch(function (error) {
-                console.error("Erro:", error);
-            });
+            if (slug && slug.split("-")[0] === usuarioAuth) {
+                loadAndEditPost(slug);
+            } else {
+                window.location.replace("index.html");
+            }
+        })
+        .catch(error => {
+            console.error("Error during user authentication:", error);
+            // Trate o erro conforme necessário
         });
 });
 
-document.addEventListener("DOMContentLoaded", function () {
-    var btnSavePost = document.getElementById("btnSavePost");
+function loadAndEditPost(slug) {
+    fetch(backendAddress + 'blog/' + slug + '/', {
+        method: 'GET',
+    })
+    .then(response => response.json())
+    .then(blogPost => {
+        // Preencher os detalhes do post nos elementos HTML
+  
+        document.getElementById("title").value = blogPost.title;
+        document.getElementById("body").value = blogPost.body;
+        document.getElementById("image").src = backendAddress + blogPost.image;
+    })
+    .catch(error => {
+        console.error("Erro ao carregar detalhes do post:", error);
+    });
+
+    const btnSavePost = document.getElementById("btnSavePost");
 
     if (btnSavePost) {
         btnSavePost.addEventListener("click", function (event) {
             event.preventDefault();
 
-            // Obtenha os novos valores do post
-            var newTitle = document.getElementById("title").value;
-            var newBody = document.getElementById("body").value;
-            var newImage = document.getElementById("image").files[0];
-
-            // Elemento para exibir mensagens
+            const newTitle = document.getElementById("title").value;
+            const newBody = document.getElementById("body").value;
+            const newImage = document.getElementById("image").files[0];
             const msg = document.getElementById("msg");
+            const urlParams = new URLSearchParams(window.location.search);
+            const slug = urlParams.get('slug');
+            const token = localStorage.getItem('token');
 
-            // Obtém o slug do post da URL
-            var urlParams = new URLSearchParams(window.location.search);
-            var slug = urlParams.get('slug');
-
-            // Obtém o token do localStorage
-            var token = localStorage.getItem('token');
-
-            // Construa um objeto FormData para enviar dados do formulário, incluindo a imagem (se fornecida)
-            var formData = new FormData();
+            const formData = new FormData();
             formData.append("title", newTitle);
             formData.append("body", newBody);
             if (newImage) {
-                formData.append("image", newImage[0]);
+                formData.append("image", newImage);
             }
-        
-            // Envia a solicitação de atualização do post
-            console.log(backendAddress + "blog/" + slug + "/update")
+
             fetch(backendAddress + "blog/" + slug + "/update", {
                 method: "PUT",
                 headers: {
@@ -59,15 +62,11 @@ document.addEventListener("DOMContentLoaded", function () {
                 },
                 body: formData,
             })
-            .then(function (response) {
-                return response.json();
-            })
-            .then(function (data) {
-                
-                if(data.response === "POST atualizado com sucesso!") {
+            .then(response => response.json())
+            .then(data => {
+                if (data.response === "POST atualizado com sucesso!") {
                     window.location.replace("index.html");
-                }
-                if (data.title && data.title.length > 1) {
+                } else if (data.title && data.title.length > 1) {
                     msg.innerHTML = 'Titulo inválido';
                 } else if (data.body && data.body.length > 1) {
                     msg.innerHTML = 'Corpo inválido';
@@ -75,10 +74,10 @@ document.addEventListener("DOMContentLoaded", function () {
                     throw new Error("Falha na atualização do post");
                 }
             })
-            .catch(function (error) {
-                console.log(error);
+            .catch(error => {
+                console.error(error);
                 msg.innerHTML = "Erro durante a atualização do post. Por favor, tente novamente.";
             });
         });
     }
-});
+}

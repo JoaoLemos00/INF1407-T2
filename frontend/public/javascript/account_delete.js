@@ -1,3 +1,5 @@
+
+
 document.addEventListener("DOMContentLoaded", function () {
     var btnDeleteAccount = document.getElementById("btnDeleteAccount");
     if (btnDeleteAccount) {
