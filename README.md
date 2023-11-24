@@ -80,7 +80,7 @@ Acesse seu perfil de usuário para atualizar informações pessoais como email, 
 
 **Link para o site:** https://t2-inf1407-frontend-391d035dcad7.herokuapp.com/index.html
 
-**Link para o backend do site:** https://t2-inf1407-backend-b72000e14b2a.herokuapp.com/
+**Link para o backend do site:** https://t2-inf1407-backend-c09f78316b39.herokuapp.com
 
 **Foram feitos 3 repositorios:**
 
