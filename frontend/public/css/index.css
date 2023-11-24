@@ -22,7 +22,7 @@ body{
   }
 
   .container-post {
-    margin-top: -195px;
+    margin-top: -194px;
     max-width: 1200px; /* Define a largura máxima se desejar */
     width: 115%; /* Ajuste a largura conforme necessário */
   /* Adicione outras regras de estilo conforme necessário */
@@ -30,7 +30,7 @@ body{
   }
   
   .container{
-    margin-top: -80px;
+    margin-top: -5px;
     padding: 15px; /* Adapte o preenchimento conforme necessário */
   
   }
