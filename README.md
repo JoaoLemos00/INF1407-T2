@@ -92,6 +92,8 @@ Acesse seu perfil de usuário para atualizar informações pessoais como email, 
 
 Os codigos sao iguais, estao apenas separadas em repositorios diferentes.
 
+Os arquivos TS só estao nesse repositorio, nao estao no do frontend. Todos os js foram gerados de ts.
+
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 Acredito que tudo que foi conversado com o professor está implementado e funcionando. Contudo nao foi implementado a recuperacao de senha por email, e não foram adicionados os comentarios.
