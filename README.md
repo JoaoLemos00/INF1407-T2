@@ -78,9 +78,9 @@ Acesse seu perfil de usuário para atualizar informações pessoais como email, 
 -----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 # Links
 
-**Link para o site:** https://t2-inf1407-frontend-391d035dcad7.herokuapp.com/index.html
+**Link para o site:** [https://t2-inf1407-frontend-391d035dcad7.herokuapp.com/index.html](https://t2-inf1407-frontend2-fdc1f5b45fd1.herokuapp.com/)
 
-**Link para o backend do site:** https://t2-inf1407-backend-c09f78316b39.herokuapp.com
+**Link para o backend do site:** [https://t2-inf1407-backend-c09f78316b39.herokuapp.com](https://t2-inf1407-backend2-f5f3c90d2da5.herokuapp.com/)
 
 **Foram feitos 3 repositorios:**
 
